@@ -1,1 +1,1 @@
-from .tele import TelegramClass
+from .telegram import TelegramClass
