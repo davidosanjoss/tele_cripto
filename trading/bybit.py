@@ -23,16 +23,15 @@ class ByBit:
     async def create_future_order(self, signal, *args, **kwargs):
         entry_price = signal.entry
         amount = self.value_per_order / entry_price
-
         tp_price = float(signal.targets[0])
         diff = abs(tp_price - entry_price)
+        sl_price = entry_price + diff
 
         if signal.side.lower() == "buy":
             sl_price = entry_price - diff
-        else:
-            sl_price = entry_price + diff
 
         params = {
+            "leverage": signal.leverage,
             "takeProfit": tp_price,
             "stopLoss": sl_price,
         }
