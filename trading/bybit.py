@@ -21,6 +21,7 @@ class ByBit:
         return await self.exchange.fetch_ticker(symbol)
 
     async def create_future_order(self, signal, *args, **kwargs):
+        symbol = f"{signal.symbol.upper()}:USDT"
         entry_price = signal.entry
         amount = self.value_per_order / entry_price
         tp_price = float(signal.targets[0])
@@ -31,15 +32,16 @@ class ByBit:
             sl_price = entry_price - diff
 
         params = {
-            "leverage": signal.leverage,
             "takeProfit": tp_price,
             "stopLoss": sl_price,
         }
 
         pprint(signal)
 
+        await self.exchange.set_leverage(signal.leverage, symbol)
+
         order = await self.exchange.create_order(
-            symbol=f"{signal.symbol.upper()}:USDT",
+            symbol=f"{symbol}",
             type="limit",
             side=signal.side.lower(),
             amount=amount,
