@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from trading import TelegramClass, ByBit
 
@@ -10,10 +11,10 @@ load_dotenv()
 async def main():
     print("🤖 Bot iniciado!")
 
-    tele = TelegramClass()
+    tele = TelegramClass(channel_id=os.getenv("TELEGRAM_CHANNEL_ID"))
     await tele.start()
 
-    bybit = ByBit(value_per_order=200, test=True)
+    bybit = ByBit(value_per_order=float(os.getenv("VALUE_PER_ORDER")), test=True)
     await tele.listen_channel(bybit.create_future_order)
 
 

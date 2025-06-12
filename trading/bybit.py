@@ -5,7 +5,7 @@ import ccxt.async_support as ccxt
 
 
 class ByBit:
-    def __init__(self, value_per_order=100.00, test=False):
+    def __init__(self, value_per_order, test=False):
         self.value_per_order = value_per_order
         # noinspection PyTypeChecker
         self.exchange = ccxt.bybit(
