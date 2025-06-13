@@ -39,14 +39,15 @@ class ByBit:
             "stopLoss": sl_price,
         }
 
+        res = await self.exchange.fetch_leverage(symbol)
+        max_leverage = int(res["info"]["leverage"])
+
         pprint(signal)
 
         try:
-            await self.exchange.set_leverage(signal.leverage, symbol)
-        except ccxt.ExchangeError as e:
-            msg = str(e)
-            if not "110043" in msg or not "leverage not modified" in msg.lower():
-                raise
+            await self.exchange.set_leverage(min(signal.leverage, max_leverage), symbol)
+        except ccxt.BadRequest as e:
+            print(e)
 
         order = await self.exchange.create_order(
             symbol=f"{symbol}",
