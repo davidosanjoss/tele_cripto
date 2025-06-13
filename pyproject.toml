@@ -3,7 +3,7 @@ name = "tele-cripto"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Devis",email = "davi.ribeirodosanjos@gmail.com"}
+    { name = "Devis", email = "davi.ribeirodosanjos@gmail.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.13"

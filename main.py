@@ -14,7 +14,7 @@ async def main():
     tele = TelegramClass(channel_id=os.getenv("TELEGRAM_CHANNEL_ID"))
     await tele.start()
 
-    bybit = ByBit(value_per_order=float(os.getenv("VALUE_PER_ORDER")), test=True)
+    bybit = ByBit(value_per_order=float(os.getenv("VALUE_PER_ORDER")), test=bool(os.getenv("ENABLE_TEST_MODE", default=False)))
     await tele.listen_channel(bybit.create_future_order)
 
 

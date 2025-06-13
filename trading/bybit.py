@@ -5,7 +5,7 @@ import ccxt.async_support as ccxt
 
 
 class ByBit:
-    def __init__(self, value_per_order, test=False):
+    def __init__(self, value_per_order=0, test=False):
         self.value_per_order = value_per_order
         # noinspection PyTypeChecker
         self.exchange = ccxt.bybit(
@@ -21,6 +21,9 @@ class ByBit:
         return await self.exchange.fetch_ticker(symbol)
 
     async def create_future_order(self, signal, *args, **kwargs):
+        if self.value_per_order == 0:
+            raise Exception("Add value in VALUE_PER_ORDER in .env")
+
         symbol = f"{signal.symbol.upper()}:USDT"
         entry_price = signal.entry
         amount = self.value_per_order / entry_price
@@ -38,7 +41,12 @@ class ByBit:
 
         pprint(signal)
 
-        await self.exchange.set_leverage(signal.leverage, symbol)
+        try:
+            await self.exchange.set_leverage(signal.leverage, symbol)
+        except ccxt.ExchangeError as e:
+            msg = str(e)
+            if not "110043" in msg or not "leverage not modified" in msg.lower():
+                raise
 
         order = await self.exchange.create_order(
             symbol=f"{symbol}",
